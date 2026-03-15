@@ -1,0 +1,213 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  PROJECT_ID: ${{ secrets.GCP_PROJECT_ID }}
+  REGION: us-central1
+  GAR_REGISTRY: ${{ secrets.GCP_PROJECT_ID }}/legallens
+  BACKEND_IMAGE: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/legallens/backend
+  FRONTEND_IMAGE: us-central1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/legallens/frontend
+
+jobs:
+  # ─── Stage 1: Lint ───
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install backend dev deps
+        working-directory: ./backend
+        run: pip install ruff
+
+      - name: Lint backend
+        working-directory: ./backend
+        run: ruff check .
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install frontend deps
+        working-directory: ./frontend
+        run: npm ci 2>/dev/null || npm install
+
+      - name: Lint frontend
+        working-directory: ./frontend
+        run: npm run lint
+
+  # ─── Stage 2: Test ───
+  test:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install backend dependencies
+        working-directory: ./backend
+        run: pip install ".[dev]"
+
+      - name: Run backend tests
+        working-directory: ./backend
+        run: pytest --tb=short -q
+        env:
+          ANTHROPIC_API_KEY: test-key-for-ci
+
+  # ─── Stage 3: Build ───
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Build frontend
+        working-directory: ./frontend
+        run: |
+          npm ci 2>/dev/null || npm install
+          npm run build
+
+      - name: Upload frontend build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist/
+          retention-days: 1
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build backend image (test only)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: false
+          tags: legallens-backend:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Build frontend image (test only)
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: false
+          tags: legallens-frontend:test
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  # ─── Stage 4: Deploy to GCP Cloud Run ───
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Authenticate to GCP
+        uses: google-github-actions/auth@v2
+        with:
+          credentials_json: ${{ secrets.GCP_SA_KEY }}
+
+      - name: Set up Cloud SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker us-central1-docker.pkg.dev
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Build and push backend
+      - name: Build & push backend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./backend
+          push: true
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
+            ${{ env.BACKEND_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Build and push frontend
+      - name: Build & push frontend image
+        uses: docker/build-push-action@v5
+        with:
+          context: ./frontend
+          push: true
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+            ${{ env.FRONTEND_IMAGE }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      # Deploy backend to Cloud Run
+      - name: Deploy backend to Cloud Run
+        run: |
+          gcloud run deploy legallens-backend \
+            --image ${{ env.BACKEND_IMAGE }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 2Gi \
+            --cpu 1 \
+            --timeout 120 \
+            --min-instances 0 \
+            --max-instances 3 \
+            --set-env-vars "ANTHROPIC_API_KEY=${{ secrets.ANTHROPIC_API_KEY }},CORS_ORIGINS=*"
+
+      # Get backend URL for frontend config
+      - name: Get backend URL
+        id: backend-url
+        run: |
+          URL=$(gcloud run services describe legallens-backend --region ${{ env.REGION }} --format 'value(status.url)')
+          echo "url=$URL" >> $GITHUB_OUTPUT
+
+      # Deploy frontend to Cloud Run
+      - name: Deploy frontend to Cloud Run
+        run: |
+          gcloud run deploy legallens-frontend \
+            --image ${{ env.FRONTEND_IMAGE }}:${{ github.sha }} \
+            --region ${{ env.REGION }} \
+            --platform managed \
+            --allow-unauthenticated \
+            --memory 256Mi \
+            --cpu 1 \
+            --min-instances 0 \
+            --max-instances 2
+
+      - name: Print deployment URLs
+        run: |
+          FRONTEND_URL=$(gcloud run services describe legallens-frontend --region ${{ env.REGION }} --format 'value(status.url)')
+          echo "## Deployment Complete" >> $GITHUB_STEP_SUMMARY
+          echo "- Frontend: $FRONTEND_URL" >> $GITHUB_STEP_SUMMARY
+          echo "- Backend:  ${{ steps.backend-url.outputs.url }}" >> $GITHUB_STEP_SUMMARY

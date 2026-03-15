@@ -1,0 +1,35 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: legallens-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./backend/.env
+    environment:
+      - CHROMA_PERSIST_DIR=/app/data/chroma_db
+      - MLFLOW_TRACKING_URI=/app/mlruns
+    volumes:
+      - chroma_data:/app/data/chroma_db
+      - mlflow_data:/app/mlruns
+    restart: unless-stopped
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: legallens-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  chroma_data:
+    driver: local
+  mlflow_data:
+    driver: local

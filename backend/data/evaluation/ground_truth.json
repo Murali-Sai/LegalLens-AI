@@ -1,0 +1,242 @@
+[
+  {
+    "id": "eval_001",
+    "text": "Neither party shall be liable for any indirect, incidental, special, or consequential damages arising out of this Agreement.",
+    "expected_clause_type": "liability",
+    "expected_risk_level": "low",
+    "doc_type": "service_agreement",
+    "notes": "Standard mutual limitation of liability"
+  },
+  {
+    "id": "eval_002",
+    "text": "Under no circumstances shall Provider be liable to Client for any damages whatsoever, including direct damages, regardless of the cause of action, even if Provider has been advised of the possibility of such damages.",
+    "expected_clause_type": "liability",
+    "expected_risk_level": "high",
+    "doc_type": "service_agreement",
+    "notes": "Complete liability waiver including direct damages — one-sided"
+  },
+  {
+    "id": "eval_003",
+    "text": "Either party may terminate this Agreement for convenience upon thirty (30) days' prior written notice to the other party.",
+    "expected_clause_type": "termination",
+    "expected_risk_level": "low",
+    "doc_type": "service_agreement",
+    "notes": "Standard mutual termination for convenience"
+  },
+  {
+    "id": "eval_004",
+    "text": "Company may terminate this Agreement immediately without cause. Employee may not terminate during the initial 24-month period and shall repay all compensation received upon early departure.",
+    "expected_clause_type": "termination",
+    "expected_risk_level": "high",
+    "doc_type": "employment_agreement",
+    "notes": "Highly asymmetric with punitive clawback"
+  },
+  {
+    "id": "eval_005",
+    "text": "All intellectual property created by Contractor during the engagement shall be work made for hire and owned exclusively by Client.",
+    "expected_clause_type": "ip_ownership",
+    "expected_risk_level": "low",
+    "doc_type": "contractor_agreement",
+    "notes": "Standard work-for-hire assignment"
+  },
+  {
+    "id": "eval_006",
+    "text": "Employee assigns to Company all rights in any inventions, ideas, or works conceived at any time during employment, including those unrelated to Company's business and developed on Employee's own time with own resources.",
+    "expected_clause_type": "ip_ownership",
+    "expected_risk_level": "high",
+    "doc_type": "employment_agreement",
+    "notes": "Overly broad — captures personal inventions"
+  },
+  {
+    "id": "eval_007",
+    "text": "Client shall pay all invoices within thirty (30) days of receipt. Late payments shall accrue interest at 1.5% per month.",
+    "expected_clause_type": "payment",
+    "expected_risk_level": "low",
+    "doc_type": "service_agreement",
+    "notes": "Standard Net-30 with reasonable late fee"
+  },
+  {
+    "id": "eval_008",
+    "text": "All fees are due upfront for the entire three-year term. No refunds shall be issued under any circumstances, including Provider's material breach or failure to deliver services.",
+    "expected_clause_type": "payment",
+    "expected_risk_level": "high",
+    "doc_type": "service_agreement",
+    "notes": "Full prepayment, no refund even for provider's breach"
+  },
+  {
+    "id": "eval_009",
+    "text": "Each party agrees to hold in confidence all Confidential Information received from the other party for a period of two (2) years following termination. Standard exclusions apply for publicly available information.",
+    "expected_clause_type": "confidentiality",
+    "expected_risk_level": "low",
+    "doc_type": "nda",
+    "notes": "Standard mutual NDA with reasonable term and exclusions"
+  },
+  {
+    "id": "eval_010",
+    "text": "Receiving Party shall maintain confidentiality of all information in perpetuity. Receiving Party may not disclose information even when compelled by court order without Disclosing Party's prior written consent.",
+    "expected_clause_type": "confidentiality",
+    "expected_risk_level": "high",
+    "doc_type": "nda",
+    "notes": "Perpetual with no legal disclosure exception — unenforceable"
+  },
+  {
+    "id": "eval_011",
+    "text": "For twelve (12) months following termination, Employee agrees not to work for direct competitors within a 50-mile radius of Company's principal office.",
+    "expected_clause_type": "non_compete",
+    "expected_risk_level": "low",
+    "doc_type": "employment_agreement",
+    "notes": "Narrowly scoped — reasonable time, geography, scope"
+  },
+  {
+    "id": "eval_012",
+    "text": "For five (5) years after termination, Employee shall not directly or indirectly engage in any business worldwide that is in any way similar to Company's business, products, or services.",
+    "expected_clause_type": "non_compete",
+    "expected_risk_level": "high",
+    "doc_type": "employment_agreement",
+    "notes": "5-year global non-compete — overly broad"
+  },
+  {
+    "id": "eval_013",
+    "text": "Each party shall indemnify and hold harmless the other party from third-party claims arising from the indemnifying party's breach or negligence.",
+    "expected_clause_type": "indemnification",
+    "expected_risk_level": "low",
+    "doc_type": "general",
+    "notes": "Standard mutual indemnification"
+  },
+  {
+    "id": "eval_014",
+    "text": "Client shall indemnify Provider against all claims, losses, and expenses of any kind, including those arising from Provider's own negligence, errors, or willful misconduct.",
+    "expected_clause_type": "indemnification",
+    "expected_risk_level": "high",
+    "doc_type": "service_agreement",
+    "notes": "Client indemnifies even for provider's own misconduct"
+  },
+  {
+    "id": "eval_015",
+    "text": "This Agreement renews automatically for one-year terms unless either party provides 60 days' written notice of non-renewal.",
+    "expected_clause_type": "auto_renewal",
+    "expected_risk_level": "low",
+    "doc_type": "service_agreement",
+    "notes": "Standard auto-renewal with reasonable notice"
+  },
+  {
+    "id": "eval_016",
+    "text": "This Agreement automatically renews for successive three-year terms. Client must provide 180 days' written notice by certified mail to cancel. Failure to timely cancel obligates Client for the full renewal term with no refund.",
+    "expected_clause_type": "auto_renewal",
+    "expected_risk_level": "high",
+    "doc_type": "service_agreement",
+    "notes": "3-year lock-in with 180-day window — designed to trap clients"
+  },
+  {
+    "id": "eval_017",
+    "text": "Tenant shall pay rent on the first of each month. A late fee of 5% applies for payments received more than 5 days after the due date.",
+    "expected_clause_type": "payment",
+    "expected_risk_level": "low",
+    "doc_type": "lease",
+    "notes": "Standard lease payment with grace period"
+  },
+  {
+    "id": "eval_018",
+    "text": "Tenant shall pay a late fee of 25% of monthly rent for payments received more than one day after the due date. Additionally a $200 returned check fee applies for each dishonored payment.",
+    "expected_clause_type": "payment",
+    "expected_risk_level": "high",
+    "doc_type": "lease",
+    "notes": "Excessive late fee with no grace period"
+  },
+  {
+    "id": "eval_019",
+    "text": "The total aggregate liability of either party shall not exceed the fees paid during the twelve months preceding the claim.",
+    "expected_clause_type": "liability",
+    "expected_risk_level": "low",
+    "doc_type": "service_agreement",
+    "notes": "Standard mutual liability cap"
+  },
+  {
+    "id": "eval_020",
+    "text": "Provider reserves the right to increase fees at any time without prior notice. Continued use constitutes acceptance of new fees.",
+    "expected_clause_type": "payment",
+    "expected_risk_level": "high",
+    "doc_type": "saas_terms",
+    "notes": "Unilateral price increases without notice"
+  },
+  {
+    "id": "eval_021",
+    "text": "Either party may terminate this Agreement immediately if the other party materially breaches and fails to cure within 30 days of written notice.",
+    "expected_clause_type": "termination",
+    "expected_risk_level": "low",
+    "doc_type": "general",
+    "notes": "Standard termination for cause with cure period"
+  },
+  {
+    "id": "eval_022",
+    "text": "Landlord may terminate this lease at any time with 14 days notice for any reason. Tenant has no right to contest and must vacate within the notice period.",
+    "expected_clause_type": "termination",
+    "expected_risk_level": "high",
+    "doc_type": "lease",
+    "notes": "Landlord can evict with minimal notice and no cause"
+  },
+  {
+    "id": "eval_023",
+    "text": "Each party retains ownership of its pre-existing intellectual property. Jointly developed IP shall be jointly owned with each party having unrestricted use rights.",
+    "expected_clause_type": "ip_ownership",
+    "expected_risk_level": "low",
+    "doc_type": "partnership_agreement",
+    "notes": "Standard mutual IP ownership"
+  },
+  {
+    "id": "eval_024",
+    "text": "By using our platform, you grant us an irrevocable, perpetual, worldwide, royalty-free license to use, reproduce, modify, and distribute any content you upload for any purpose.",
+    "expected_clause_type": "ip_ownership",
+    "expected_risk_level": "high",
+    "doc_type": "saas_terms",
+    "notes": "Perpetual irrevocable license to all user content"
+  },
+  {
+    "id": "eval_025",
+    "text": "Employee acknowledges access to proprietary information during employment and agrees not to disclose such information during or after employment except as required to perform duties.",
+    "expected_clause_type": "confidentiality",
+    "expected_risk_level": "low",
+    "doc_type": "employment_agreement",
+    "notes": "Standard employment confidentiality"
+  },
+  {
+    "id": "eval_026",
+    "text": "Contractor agrees not to provide substantially similar services to direct competitors identified in Exhibit A for six months after termination.",
+    "expected_clause_type": "non_compete",
+    "expected_risk_level": "low",
+    "doc_type": "contractor_agreement",
+    "notes": "Narrowly scoped contractor non-compete"
+  },
+  {
+    "id": "eval_027",
+    "text": "Employee agrees not to work for any company in the technology sector for two years after termination, regardless of role or whether the company competes with us.",
+    "expected_clause_type": "non_compete",
+    "expected_risk_level": "high",
+    "doc_type": "employment_agreement",
+    "notes": "Bans entire industry employment — almost certainly unenforceable"
+  },
+  {
+    "id": "eval_028",
+    "text": "Tenant shall indemnify Landlord from claims arising from Tenant's use of the premises, except to the extent caused by Landlord's negligence or willful misconduct.",
+    "expected_clause_type": "indemnification",
+    "expected_risk_level": "low",
+    "doc_type": "lease",
+    "notes": "Standard tenant indemnification with landlord carve-out"
+  },
+  {
+    "id": "eval_029",
+    "text": "This subscription renews monthly. Cancel any time through your account settings, effective at end of current billing period.",
+    "expected_clause_type": "auto_renewal",
+    "expected_risk_level": "low",
+    "doc_type": "saas_terms",
+    "notes": "Standard monthly auto-renewal with easy cancellation"
+  },
+  {
+    "id": "eval_030",
+    "text": "Cancellation requests must be submitted in writing to our legal department and take effect no sooner than 90 days after receipt. No pro-rated refunds for committed billing periods.",
+    "expected_clause_type": "auto_renewal",
+    "expected_risk_level": "high",
+    "doc_type": "saas_terms",
+    "notes": "90-day cancellation processing — designed to prevent cancellation"
+  }
+]

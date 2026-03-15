@@ -1,0 +1,142 @@
+[
+  {
+    "clause_type": "liability",
+    "text": "Under no circumstances shall Provider be liable to Client for any damages whatsoever, including but not limited to direct, indirect, incidental, special, consequential, or punitive damages, regardless of the cause of action or theory of liability, even if Provider has been advised of the possibility of such damages.",
+    "doc_type": "service_agreement",
+    "risk_level": "high",
+    "notes": "Complete liability waiver — one-sided, Provider accepts zero responsibility"
+  },
+  {
+    "clause_type": "liability",
+    "text": "Client acknowledges and agrees that Provider's total liability for all claims arising under this Agreement shall not exceed one dollar ($1.00). Client waives all rights to seek damages in excess of this amount.",
+    "doc_type": "service_agreement",
+    "risk_level": "high",
+    "notes": "Nominal liability cap renders the contract essentially unenforceable"
+  },
+  {
+    "clause_type": "liability",
+    "text": "Tenant shall be solely responsible for any and all damages, losses, or injuries occurring on the premises, regardless of cause, including those resulting from structural defects, building code violations, or Landlord's failure to maintain the property.",
+    "doc_type": "lease",
+    "risk_level": "high",
+    "notes": "Shifts all liability to tenant including landlord's own negligence"
+  },
+  {
+    "clause_type": "termination",
+    "text": "Provider may terminate this Agreement at any time, for any reason, with or without notice. Client may terminate only upon ninety (90) days written notice and payment of an early termination fee equal to the remaining contract value.",
+    "doc_type": "service_agreement",
+    "risk_level": "high",
+    "notes": "Highly asymmetric — provider can leave freely, client locked in with penalty"
+  },
+  {
+    "clause_type": "termination",
+    "text": "Landlord reserves the right to terminate this lease at any time with fourteen (14) days notice for any reason Landlord deems sufficient. Tenant shall have no right to contest such termination and shall vacate the premises within the notice period.",
+    "doc_type": "lease",
+    "risk_level": "high",
+    "notes": "Landlord can evict with minimal notice and no cause — likely unenforceable in many jurisdictions"
+  },
+  {
+    "clause_type": "termination",
+    "text": "This Agreement may not be terminated by Employee for any reason during the initial three (3) year term. Early departure shall result in Employee repaying all compensation received during the employment term plus a liquidated damages amount of $50,000.",
+    "doc_type": "employment_agreement",
+    "risk_level": "high",
+    "notes": "Traps employee with clawback and punitive damages — likely unenforceable"
+  },
+  {
+    "clause_type": "ip_ownership",
+    "text": "Employee hereby assigns to the Company all rights, title, and interest in any and all inventions, ideas, discoveries, and works of authorship, whether or not related to the Company's business, conceived at any time during the term of employment, including those developed on Employee's own time using Employee's own resources.",
+    "doc_type": "employment_agreement",
+    "risk_level": "high",
+    "notes": "Overly broad — captures all personal inventions regardless of relation to work"
+  },
+  {
+    "clause_type": "ip_ownership",
+    "text": "Contractor agrees that all intellectual property, including but not limited to pre-existing materials, tools, frameworks, and methodologies that Contractor uses or incorporates in the deliverables, shall become the exclusive property of Client upon delivery.",
+    "doc_type": "contractor_agreement",
+    "risk_level": "high",
+    "notes": "Claims ownership of contractor's pre-existing IP and tools — extremely aggressive"
+  },
+  {
+    "clause_type": "ip_ownership",
+    "text": "By using our service, you grant us an irrevocable, perpetual, worldwide, royalty-free license to use, reproduce, modify, distribute, and create derivative works from any content you upload or create using our platform, for any purpose whatsoever.",
+    "doc_type": "saas_terms",
+    "risk_level": "high",
+    "notes": "Irrevocable perpetual license to all user content — extremely broad"
+  },
+  {
+    "clause_type": "payment",
+    "text": "Client agrees to pay all fees upfront for the entire contract term. No refunds shall be provided under any circumstances, including termination for Provider's breach, service interruption, or failure to deliver. All fees are non-refundable and non-cancellable.",
+    "doc_type": "service_agreement",
+    "risk_level": "high",
+    "notes": "Full prepayment with no refund even for provider's breach — extremely one-sided"
+  },
+  {
+    "clause_type": "payment",
+    "text": "Provider reserves the right to increase fees at any time without prior notice. Continued use of the service after a fee increase constitutes acceptance of the new fees. Client agrees to pay any increased fees immediately upon notification.",
+    "doc_type": "saas_terms",
+    "risk_level": "high",
+    "notes": "Unilateral price increases without notice or consent — no price protection"
+  },
+  {
+    "clause_type": "payment",
+    "text": "Tenant shall pay a late fee of twenty-five percent (25%) of the monthly rent for payments received more than one (1) day after the due date. Additionally, Tenant shall pay a returned check fee of $200 for each dishonored payment.",
+    "doc_type": "lease",
+    "risk_level": "high",
+    "notes": "Excessive late fee (25%) with no grace period — likely unenforceable in many jurisdictions"
+  },
+  {
+    "clause_type": "confidentiality",
+    "text": "Receiving Party shall maintain the confidentiality of all information provided by Disclosing Party in perpetuity, without exception. Receiving Party shall not disclose any information even if compelled by court order, subpoena, or regulatory requirement without first obtaining written consent from Disclosing Party.",
+    "doc_type": "nda",
+    "risk_level": "high",
+    "notes": "Perpetual obligation that prohibits legally required disclosures — unenforceable"
+  },
+  {
+    "clause_type": "confidentiality",
+    "text": "All information exchanged between the parties, whether marked confidential or not, shall be treated as proprietary and confidential. The receiving party shall be liable for any unauthorized disclosure, including disclosures by its employees, agents, or any third party who obtains the information through any means.",
+    "doc_type": "nda",
+    "risk_level": "high",
+    "notes": "No exclusions, unlimited scope, strict liability for third-party breaches"
+  },
+  {
+    "clause_type": "non_compete",
+    "text": "For a period of five (5) years following termination of employment, Employee shall not directly or indirectly engage in, consult for, or have any interest in any business anywhere in the world that is in any way competitive with or similar to the Company's business, products, or services.",
+    "doc_type": "employment_agreement",
+    "risk_level": "high",
+    "notes": "5-year global non-compete — overly broad in time, geography, and scope"
+  },
+  {
+    "clause_type": "non_compete",
+    "text": "Employee agrees that for a period of two (2) years after termination, Employee will not work for any company in the technology industry, regardless of the role or whether the company is a competitor. Employee further agrees that this restriction is reasonable and necessary.",
+    "doc_type": "employment_agreement",
+    "risk_level": "high",
+    "notes": "Bans employment in entire industry, not just competitors — almost certainly unenforceable"
+  },
+  {
+    "clause_type": "indemnification",
+    "text": "Client shall indemnify, defend, and hold harmless Provider, its officers, directors, employees, and agents from and against any and all claims, damages, losses, and expenses of any kind, including those arising from Provider's own negligence, errors, or omissions in performing the services.",
+    "doc_type": "service_agreement",
+    "risk_level": "high",
+    "notes": "Client indemnifies provider even for provider's own negligence — one-sided"
+  },
+  {
+    "clause_type": "indemnification",
+    "text": "Tenant shall indemnify Landlord against all claims, demands, actions, damages, losses, costs, and expenses, including attorney's fees, arising from any cause whatsoever in connection with the premises, including those arising from Landlord's acts or omissions.",
+    "doc_type": "lease",
+    "risk_level": "high",
+    "notes": "Tenant indemnifies landlord for landlord's own acts — extremely unfair"
+  },
+  {
+    "clause_type": "auto_renewal",
+    "text": "This Agreement shall automatically renew for successive three (3) year terms unless Client provides written notice of non-renewal by certified mail at least one hundred eighty (180) days prior to the end of the current term. Failure to provide timely notice shall obligate Client for the full renewal term.",
+    "doc_type": "service_agreement",
+    "risk_level": "high",
+    "notes": "3-year auto-renewal with 180-day notice window — designed to trap clients"
+  },
+  {
+    "clause_type": "auto_renewal",
+    "text": "This subscription automatically renews annually. Cancellation requests must be submitted in writing to our legal department and will take effect no sooner than ninety (90) days after receipt. No pro-rated refunds will be issued for the current or any future billing period already committed.",
+    "doc_type": "saas_terms",
+    "risk_level": "high",
+    "notes": "90-day cancellation processing with no refunds — designed to prevent cancellation"
+  }
+]

@@ -1,0 +1,149 @@
+[
+  {
+    "clause_type": "liability",
+    "text": "Neither party shall be liable to the other for any indirect, incidental, special, consequential, or punitive damages arising out of or related to this Agreement, regardless of the theory of liability.",
+    "doc_type": "general",
+    "risk_level": "low",
+    "notes": "Mutual limitation — standard in most commercial contracts"
+  },
+  {
+    "clause_type": "liability",
+    "text": "The total aggregate liability of either party under this Agreement shall not exceed the total fees paid or payable by Client during the twelve (12) month period immediately preceding the claim.",
+    "doc_type": "service_agreement",
+    "risk_level": "low",
+    "notes": "Standard liability cap tied to contract value"
+  },
+  {
+    "clause_type": "liability",
+    "text": "Each party shall be liable for direct damages caused by its breach of this Agreement, subject to the limitations set forth herein. Nothing in this Agreement shall limit liability for death or personal injury caused by negligence, fraud, or fraudulent misrepresentation.",
+    "doc_type": "general",
+    "risk_level": "low",
+    "notes": "Standard carve-outs for statutory protections"
+  },
+  {
+    "clause_type": "termination",
+    "text": "Either party may terminate this Agreement for convenience upon thirty (30) days' prior written notice to the other party. Upon termination, all obligations shall cease except those that by their nature survive termination.",
+    "doc_type": "service_agreement",
+    "risk_level": "low",
+    "notes": "Mutual termination for convenience — balanced and standard"
+  },
+  {
+    "clause_type": "termination",
+    "text": "Either party may terminate this Agreement immediately upon written notice if the other party materially breaches this Agreement and fails to cure such breach within thirty (30) days after receiving written notice of the breach.",
+    "doc_type": "general",
+    "risk_level": "low",
+    "notes": "Standard termination for cause with cure period"
+  },
+  {
+    "clause_type": "termination",
+    "text": "This lease agreement shall be for a term of twelve (12) months. Either party may terminate by providing sixty (60) days written notice prior to the end of the lease term. If neither party provides notice, the lease shall convert to a month-to-month tenancy.",
+    "doc_type": "lease",
+    "risk_level": "low",
+    "notes": "Standard residential lease termination with clear conversion terms"
+  },
+  {
+    "clause_type": "ip_ownership",
+    "text": "All intellectual property created by Contractor in the course of performing services under this Agreement shall be considered work made for hire and shall be the sole property of the Client. Contractor hereby assigns all rights, title, and interest in such work to Client.",
+    "doc_type": "contractor_agreement",
+    "risk_level": "low",
+    "notes": "Standard work-for-hire with assignment — typical for contractor agreements"
+  },
+  {
+    "clause_type": "ip_ownership",
+    "text": "Each party shall retain ownership of its pre-existing intellectual property. Any jointly developed intellectual property shall be jointly owned, with each party having the right to use such IP without restriction or accounting to the other party.",
+    "doc_type": "partnership_agreement",
+    "risk_level": "low",
+    "notes": "Standard mutual IP ownership with pre-existing IP carve-out"
+  },
+  {
+    "clause_type": "ip_ownership",
+    "text": "Employee agrees that all inventions, discoveries, and works of authorship conceived or made during the term of employment and related to the Company's business shall be the sole property of the Company. Employee assigns all rights in such inventions to the Company.",
+    "doc_type": "employment_agreement",
+    "risk_level": "low",
+    "notes": "Standard employment IP assignment scoped to company business"
+  },
+  {
+    "clause_type": "payment",
+    "text": "Client shall pay all invoices within thirty (30) days of receipt. Late payments shall accrue interest at a rate of 1.5% per month or the maximum rate permitted by law, whichever is lower.",
+    "doc_type": "service_agreement",
+    "risk_level": "low",
+    "notes": "Standard Net-30 payment terms with reasonable late fee"
+  },
+  {
+    "clause_type": "payment",
+    "text": "Rent shall be due on the first day of each month. A late fee of five percent (5%) of the monthly rent shall be assessed for payments received more than five (5) days after the due date.",
+    "doc_type": "lease",
+    "risk_level": "low",
+    "notes": "Standard lease payment with grace period and reasonable late fee"
+  },
+  {
+    "clause_type": "payment",
+    "text": "Compensation shall be paid on a bi-weekly basis, subject to applicable tax withholdings and deductions. Employee shall be eligible for an annual performance bonus at the discretion of the Company, based on individual and company performance metrics.",
+    "doc_type": "employment_agreement",
+    "risk_level": "low",
+    "notes": "Standard employment compensation terms"
+  },
+  {
+    "clause_type": "confidentiality",
+    "text": "Each party agrees to hold in confidence all Confidential Information received from the other party and to use such information solely for the purposes of this Agreement. Confidential Information shall not include information that is publicly available, independently developed, or rightfully received from a third party.",
+    "doc_type": "nda",
+    "risk_level": "low",
+    "notes": "Standard mutual NDA with reasonable exclusions"
+  },
+  {
+    "clause_type": "confidentiality",
+    "text": "The obligations of confidentiality under this Agreement shall survive for a period of two (2) years following the termination or expiration of this Agreement. Upon termination, each party shall promptly return or destroy all Confidential Information of the other party.",
+    "doc_type": "nda",
+    "risk_level": "low",
+    "notes": "Standard 2-year survival with return/destroy obligation"
+  },
+  {
+    "clause_type": "confidentiality",
+    "text": "Employee acknowledges that during employment, Employee may have access to proprietary information and trade secrets. Employee agrees not to disclose such information during or after employment except as required in the performance of Employee's duties.",
+    "doc_type": "employment_agreement",
+    "risk_level": "low",
+    "notes": "Standard employment confidentiality obligation"
+  },
+  {
+    "clause_type": "non_compete",
+    "text": "For a period of twelve (12) months following termination of employment, Employee agrees not to engage in any business that directly competes with the Company's primary products or services within a fifty (50) mile radius of the Company's principal office.",
+    "doc_type": "employment_agreement",
+    "risk_level": "low",
+    "notes": "Narrowly scoped non-compete — reasonable time, geography, and scope"
+  },
+  {
+    "clause_type": "non_compete",
+    "text": "During the term of this Agreement and for six (6) months thereafter, Contractor agrees not to provide substantially similar services to direct competitors of the Client as identified in Exhibit A.",
+    "doc_type": "contractor_agreement",
+    "risk_level": "low",
+    "notes": "Narrowly scoped contractor non-compete with identified competitors"
+  },
+  {
+    "clause_type": "indemnification",
+    "text": "Each party shall indemnify, defend, and hold harmless the other party from and against any third-party claims, damages, and expenses (including reasonable attorneys' fees) arising from the indemnifying party's breach of this Agreement or negligent acts.",
+    "doc_type": "general",
+    "risk_level": "low",
+    "notes": "Standard mutual indemnification"
+  },
+  {
+    "clause_type": "indemnification",
+    "text": "Tenant shall indemnify and hold Landlord harmless from any claims arising from Tenant's use of the premises, except to the extent caused by Landlord's negligence or willful misconduct.",
+    "doc_type": "lease",
+    "risk_level": "low",
+    "notes": "Standard tenant indemnification with landlord negligence carve-out"
+  },
+  {
+    "clause_type": "auto_renewal",
+    "text": "This Agreement shall automatically renew for successive one (1) year terms unless either party provides written notice of non-renewal at least sixty (60) days prior to the end of the then-current term.",
+    "doc_type": "service_agreement",
+    "risk_level": "low",
+    "notes": "Standard auto-renewal with 60-day opt-out window"
+  },
+  {
+    "clause_type": "auto_renewal",
+    "text": "This subscription shall renew automatically on a monthly basis. You may cancel at any time effective at the end of the current billing period by providing notice through your account settings.",
+    "doc_type": "saas_terms",
+    "risk_level": "low",
+    "notes": "Standard monthly SaaS auto-renewal with easy cancellation"
+  }
+]
