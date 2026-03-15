@@ -89,7 +89,10 @@ async def upload_document(file: UploadFile):
         )
 
     document_id = str(uuid.uuid4())
-    logger.info("Starting analysis for %s (id=%s, size=%d bytes)", file.filename, document_id, len(contents))
+    logger.info(
+        "Starting analysis for %s (id=%s, size=%d bytes)",
+        file.filename, document_id, len(contents),
+    )
 
     start_time = time.time()
     try:
@@ -180,7 +183,11 @@ async def run_evaluation(request: EvaluationRequest):
     if not metrics_logged:
         raise HTTPException(
             status_code=400,
-            detail="No complete metric groups provided. Send precision+recall+f1, mrr_at_5+hit_rate, or risk_accuracy+risk_agreement_rate.",
+            detail=(
+                "No complete metric groups provided. "
+                "Send precision+recall+f1, mrr_at_5+hit_rate, "
+                "or risk_accuracy+risk_agreement_rate."
+            ),
         )
 
     return EvaluationResponse(

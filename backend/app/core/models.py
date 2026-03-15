@@ -3,7 +3,6 @@ from typing import TypedDict
 
 from pydantic import BaseModel, Field
 
-
 # --- Enums ---
 
 class ClauseType(str, Enum):

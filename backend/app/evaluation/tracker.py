@@ -1,6 +1,5 @@
 """MLflow evaluation tracking for clause detection, retrieval quality, and risk scoring."""
 
-import json
 import logging
 from datetime import datetime, timezone
 

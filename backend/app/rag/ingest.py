@@ -37,7 +37,10 @@ def ingest_clauses(collection_name: str, clauses: list[dict]) -> int:
     # Check existing count to avoid duplicates
     existing = collection.count()
     if existing > 0:
-        logger.info("Collection '%s' already has %d documents — skipping", collection_name, existing)
+        logger.info(
+            "Collection '%s' already has %d documents — skipping",
+            collection_name, existing,
+        )
         return 0
 
     ids = []

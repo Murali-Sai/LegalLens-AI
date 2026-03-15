@@ -59,7 +59,7 @@ def parse_json_response(text: str) -> dict | list:
     cleaned = text.strip()
     if cleaned.startswith("```"):
         lines = cleaned.split("\n")
-        lines = [l for l in lines if not l.strip().startswith("```")]
+        lines = [line for line in lines if not line.strip().startswith("```")]
         cleaned = "\n".join(lines).strip()
     return json.loads(cleaned)
 
@@ -91,7 +91,9 @@ def extract_node(state: PipelineState) -> dict:
                 elements = partition_pdf(filename=tmp_path, strategy="fast")
             except (ImportError, ModuleNotFoundError):
                 # Fallback: use PyMuPDF which handles most PDFs well
-                logger.warning("unstructured_inference not available, using PyMuPDF fallback for PDF")
+                logger.warning(
+                    "unstructured_inference not available, using PyMuPDF fallback for PDF"
+                )
                 import fitz  # PyMuPDF
                 from unstructured.partition.text import partition_text
                 doc = fitz.open(tmp_path)
@@ -280,7 +282,8 @@ def _benchmark_clause(clause: ClassifiedClause) -> BenchmarkResult:
         # Process risky results
         if risky_results and risky_results["documents"] and risky_results["documents"][0]:
             for i, doc in enumerate(risky_results["documents"][0]):
-                distance = risky_results["distances"][0][i] if risky_results.get("distances") else 1.0
+                dist = risky_results["distances"][0][i]
+                distance = dist if risky_results.get("distances") else 1.0
                 similarity = max(0.0, 1.0 - distance)
                 similar_clauses.append({
                     "text": doc,
@@ -302,7 +305,9 @@ def _benchmark_clause(clause: ClassifiedClause) -> BenchmarkResult:
 
         deviation = ""
         if not is_standard and risky_max > 0.3:
-            deviation = "This clause is more similar to known risky clause patterns than standard ones."
+            deviation = (
+                "This clause is more similar to known risky clause patterns than standard ones."
+            )
         elif std_max < 0.3 and risky_max < 0.3:
             deviation = "No close matches found in the benchmark database — clause may be unusual."
 
@@ -339,7 +344,9 @@ def flag_node(state: PipelineState) -> dict:
             clause_type=item.clause.clause_type.value,
             clause_text=item.clause.chunk.text,
             is_standard=item.benchmark.is_standard,
-            deviation_summary=item.benchmark.deviation_summary or "No significant deviations found.",
+            deviation_summary=(
+                item.benchmark.deviation_summary or "No significant deviations found."
+            ),
         )
 
         response_text = call_claude(FLAG_SYSTEM, user_prompt)

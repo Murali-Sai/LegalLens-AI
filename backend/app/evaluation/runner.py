@@ -14,12 +14,6 @@ import time
 from collections import defaultdict
 from pathlib import Path
 
-from app.core.models import (
-    ClassifiedClause,
-    ClauseType,
-    DocumentChunk,
-    RiskLevel,
-)
 from app.evaluation.tracker import (
     log_clause_detection_metrics,
     log_retrieval_metrics,
@@ -303,7 +297,10 @@ def evaluate_risk_scoring(samples: list[dict]) -> dict:
         details={"per_level": per_level_details},
     )
 
-    logger.info("Risk scoring — Accuracy: %.1f%%, Agreement: %.1f%%", accuracy * 100, agreement_rate * 100)
+    logger.info(
+        "Risk scoring — Accuracy: %.1f%%, Agreement: %.1f%%",
+        accuracy * 100, agreement_rate * 100,
+    )
     return result
 
 
