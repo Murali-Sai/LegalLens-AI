@@ -1,80 +1,55 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import DocumentUpload from "./components/DocumentUpload";
 import AnalysisResults from "./components/AnalysisResults";
+import AnalysisHistory from "./components/AnalysisHistory";
 import PipelineProgress from "./components/PipelineProgress";
 
-const PIPELINE_STEPS = [
-  { key: "extract", label: "Extracting text", desc: "Parsing document structure..." },
-  { key: "analyze", label: "Analyzing clauses", desc: "Classifying clause types with AI..." },
-  { key: "compare", label: "Benchmarking", desc: "Comparing against legal clause database..." },
-  { key: "flag", label: "Scoring risk", desc: "Evaluating risk levels..." },
+export const PIPELINE_STEPS = [
+  { key: "extract", label: "Extracting text",        desc: "Parsing document structure..." },
+  { key: "analyze", label: "Analyzing clauses",       desc: "Classifying clause types with AI..." },
+  { key: "compare", label: "Benchmarking",            desc: "Comparing against legal clause database..." },
+  { key: "flag",    label: "Scoring risk",            desc: "Evaluating risk levels..." },
   { key: "explain", label: "Generating explanations", desc: "Writing plain-English summaries..." },
 ];
 
 export default function App() {
-  const [analysis, setAnalysis] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [analysis, setAnalysis]       = useState(null);
+  const [loading, setLoading]         = useState(false);
   const [pipelineStep, setPipelineStep] = useState(-1);
-  const intervalRef = useRef(null);
-  const pendingResultRef = useRef(null);
+  const [error, setError]             = useState(null);
+  const [showHistory, setShowHistory] = useState(false);
 
   const handleUploadStart = () => {
     setLoading(true);
+    setError(null);
+    setAnalysis(null);
     setPipelineStep(0);
-    pendingResultRef.current = null;
-    // Simulate pipeline progress (actual backend processes all at once)
-    intervalRef.current = setInterval(() => {
-      setPipelineStep((prev) => {
-        if (prev >= PIPELINE_STEPS.length - 1) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-          // If result already arrived, show it now
-          if (pendingResultRef.current) {
-            const result = pendingResultRef.current;
-            pendingResultRef.current = null;
-            setTimeout(() => {
-              setAnalysis(result);
-              setLoading(false);
-              setPipelineStep(-1);
-            }, 800);
-          }
-          return prev;
-        }
-        return prev + 1;
-      });
-    }, 2000);
+  };
+
+  // Called by SSE progress events — step_index is 0-based
+  const handleStep = (stepIndex) => {
+    setPipelineStep(stepIndex);
   };
 
   const handleAnalysisComplete = (result) => {
-    // If timer is still running, store result and let timer finish naturally
-    if (intervalRef.current) {
-      pendingResultRef.current = result;
-      // Speed up remaining steps
-      clearInterval(intervalRef.current);
-      intervalRef.current = setInterval(() => {
-        setPipelineStep((prev) => {
-          if (prev >= PIPELINE_STEPS.length - 1) {
-            clearInterval(intervalRef.current);
-            intervalRef.current = null;
-            setTimeout(() => {
-              setAnalysis(result);
-              setLoading(false);
-              setPipelineStep(-1);
-            }, 800);
-            return prev;
-          }
-          return prev + 1;
-        });
-      }, 600);
-    } else {
-      // Timer already done, show result immediately
-      setPipelineStep(PIPELINE_STEPS.length - 1);
-      setTimeout(() => {
-        setAnalysis(result);
-        setLoading(false);
-        setPipelineStep(-1);
-      }, 800);
-    }
+    setPipelineStep(PIPELINE_STEPS.length - 1);
+    setTimeout(() => {
+      setAnalysis(result);
+      setLoading(false);
+      setPipelineStep(-1);
+    }, 600);
+  };
+
+  const handleError = (message) => {
+    setLoading(false);
+    setPipelineStep(-1);
+    setError(message);
+  };
+
+  const reset = () => {
+    setAnalysis(null);
+    setError(null);
+    setLoading(false);
   };
 
   return (
@@ -90,26 +65,41 @@ export default function App() {
               <span className="text-xs text-gray-400">AI Contract Analyst</span>
             </div>
           </div>
-          {analysis && (
+
+          <div className="flex items-center gap-2">
+            {(analysis || error) && (
+              <button
+                onClick={reset}
+                className="px-4 py-2 text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
+              >
+                New Analysis
+              </button>
+            )}
             <button
-              onClick={() => setAnalysis(null)}
-              className="px-4 py-2 text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 rounded-lg transition-all duration-200 shadow-sm hover:shadow-md active:scale-[0.98]"
+              onClick={() => setShowHistory((v) => !v)}
+              className="px-4 py-2 text-sm font-medium text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-all duration-200"
             >
-              New Analysis
+              History
             </button>
-          )}
+          </div>
         </div>
       </header>
 
       <main className="flex-1 max-w-6xl w-full mx-auto px-6 py-8">
         {loading ? (
           <PipelineProgress steps={PIPELINE_STEPS} currentStep={pipelineStep} />
+        ) : error ? (
+          <ErrorView message={error} onReset={reset} />
         ) : analysis ? (
-          <AnalysisResults analysis={analysis} onReset={() => setAnalysis(null)} />
+          <AnalysisResults analysis={analysis} onReset={reset} />
+        ) : showHistory ? (
+          <AnalysisHistory onSelect={setAnalysis} onClose={() => setShowHistory(false)} />
         ) : (
           <DocumentUpload
-            onAnalysisComplete={handleAnalysisComplete}
             onUploadStart={handleUploadStart}
+            onStep={handleStep}
+            onAnalysisComplete={handleAnalysisComplete}
+            onError={handleError}
           />
         )}
       </main>
@@ -117,6 +107,24 @@ export default function App() {
       <footer className="text-center text-xs text-gray-400 py-6 border-t border-gray-100/60">
         This tool provides informational analysis only — not legal advice. Always consult a qualified attorney.
       </footer>
+    </div>
+  );
+}
+
+function ErrorView({ message, onReset }) {
+  return (
+    <div className="flex flex-col items-center justify-center pt-24 animate-fade-in">
+      <div className="w-14 h-14 bg-red-50 rounded-2xl flex items-center justify-center mb-5 ring-1 ring-red-100">
+        <span className="text-2xl">⚠</span>
+      </div>
+      <h2 className="text-xl font-semibold mb-2 text-gray-900">Analysis Failed</h2>
+      <p className="text-gray-500 text-sm mb-6 max-w-md text-center">{message}</p>
+      <button
+        onClick={onReset}
+        className="px-6 py-2.5 text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 rounded-lg transition-all duration-200 shadow-sm"
+      >
+        Try Again
+      </button>
     </div>
   );
 }

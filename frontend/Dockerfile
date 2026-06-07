@@ -12,15 +12,15 @@ RUN npm run build
 # Stage 2: Serve with nginx
 FROM nginx:1.27-alpine
 
-# Copy built assets
 COPY --from=build /app/dist /usr/share/nginx/html
-
-# Copy nginx config
 COPY nginx.conf /etc/nginx/conf.d/default.conf
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 EXPOSE 80
 
 HEALTHCHECK --interval=30s --timeout=3s \
     CMD wget -q --spider http://localhost/ || exit 1
 
-CMD ["nginx", "-g", "daemon off;"]
+# Entrypoint rewrites the backend URL at runtime, then starts nginx
+CMD ["/docker-entrypoint.sh"]

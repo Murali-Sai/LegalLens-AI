@@ -21,11 +21,19 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Initialize resources on startup, cleanup on shutdown."""
     logger.info("Starting LegalLens API...")
-    initialize_vector_store()
-    # Auto-ingest seed data if collections are empty
-    from app.rag.ingest import run_ingestion
 
+    from app.db import init_db
+    init_db()
+
+    initialize_vector_store()
+    from app.rag.ingest import run_ingestion
     run_ingestion()
+
+    if settings.effective_mock_mode:
+        logger.warning(
+            "ANTHROPIC_API_KEY not set — running in mock mode (keyword-based analysis)"
+        )
+
     logger.info("LegalLens API ready")
     yield
     logger.info("Shutting down LegalLens API")

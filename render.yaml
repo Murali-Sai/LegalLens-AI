@@ -1,0 +1,48 @@
+services:
+  # ── Backend ────────────────────────────────────────────────────────────────
+  - type: web
+    name: legallens-backend
+    runtime: docker
+    dockerfilePath: ./backend/Dockerfile
+    dockerContext: ./backend
+    plan: starter          # 512 MB RAM — upgrade to standard (2 GB) for full Claude mode
+    region: oregon
+
+    envVars:
+      - key: ANTHROPIC_API_KEY
+        sync: false        # Set this in the Render dashboard → Environment
+      - key: ANTHROPIC_MODEL
+        value: claude-sonnet-4-20250514
+      - key: CHROMA_PERSIST_DIR
+        value: /data/chroma_db
+      - key: MLFLOW_TRACKING_URI
+        value: /data/mlruns
+      - key: LOG_LEVEL
+        value: INFO
+      # MOCK_MODE=true for demo deployments without an API key.
+      # Remove (or set to false) once ANTHROPIC_API_KEY is configured.
+      - key: MOCK_MODE
+        value: "false"
+
+    disk:
+      name: legallens-data
+      mountPath: /data
+      sizeGB: 1
+
+    healthCheckPath: /api/health
+
+  # ── Frontend ───────────────────────────────────────────────────────────────
+  - type: web
+    name: legallens-frontend
+    runtime: docker
+    dockerfilePath: ./frontend/Dockerfile
+    dockerContext: ./frontend
+    plan: free
+    region: oregon
+
+    envVars:
+      - key: BACKEND_URL
+        fromService:
+          name: legallens-backend
+          type: web
+          property: host

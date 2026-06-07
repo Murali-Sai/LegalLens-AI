@@ -20,5 +20,10 @@ class Settings(BaseSettings):
 
     model_config = {"env_file": ".env", "env_file_encoding": "utf-8"}
 
+    @property
+    def effective_mock_mode(self) -> bool:
+        """Auto-enable mock mode when no API key is configured."""
+        return self.mock_mode or not self.anthropic_api_key.strip()
+
 
 settings = Settings()

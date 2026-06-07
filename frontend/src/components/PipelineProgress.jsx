@@ -8,6 +8,7 @@ const stepIcons = {
   explain: MessageCircle,
 };
 
+// currentStep is the 0-based index of the step CURRENTLY running (from SSE progress events)
 export default function PipelineProgress({ steps, currentStep }) {
   const progress = Math.min(((currentStep + 1) / steps.length) * 100, 100);
 

@@ -1,31 +1,28 @@
 import { useCallback } from "react";
 import { useDropzone } from "react-dropzone";
-import { Upload, FileText, Shield, MessageSquare, Brain } from "lucide-react";
-import { uploadDocument } from "../utils/api";
+import { Upload, FileText, Shield, MessageSquare, Brain, Play } from "lucide-react";
+import { uploadAndStream, streamDemo } from "../utils/api";
 
 const FEATURES = [
-  { title: "Clause Detection", desc: "Identifies liability, termination, IP, payment, and confidentiality clauses", icon: FileText },
-  { title: "Risk Scoring", desc: "Rates each clause as low, medium, or high risk with reasoning", icon: Shield },
-  { title: "Plain-English Explanations", desc: "Translates legal jargon into simple language anyone can understand", icon: MessageSquare },
-  { title: "Actionable Recommendations", desc: "Specific advice on what to negotiate, accept, or flag for a lawyer", icon: Brain },
+  { title: "Clause Detection",          desc: "Identifies liability, termination, IP, payment, and confidentiality clauses", icon: FileText },
+  { title: "Risk Scoring",              desc: "Rates each clause as low, medium, or high risk with reasoning",               icon: Shield },
+  { title: "Plain-English Explanations",desc: "Translates legal jargon into simple language anyone can understand",          icon: MessageSquare },
+  { title: "Actionable Recommendations",desc: "Specific advice on what to negotiate, accept, or flag for a lawyer",          icon: Brain },
 ];
 
 const DOC_TYPES = ["Leases", "NDAs", "Employment Agreements", "Service Contracts"];
 
-export default function DocumentUpload({ onAnalysisComplete, onUploadStart }) {
+export default function DocumentUpload({ onUploadStart, onStep, onAnalysisComplete, onError }) {
+  const callbacks = { onStep, onComplete: onAnalysisComplete, onError };
+
   const onDrop = useCallback(
     async (acceptedFiles) => {
       if (acceptedFiles.length === 0) return;
       onUploadStart();
-      try {
-        const result = await uploadDocument(acceptedFiles[0]);
-        onAnalysisComplete(result);
-      } catch (err) {
-        alert(err.response?.data?.detail || "Analysis failed. Please try again.");
-        window.location.reload();
-      }
+      await uploadAndStream(acceptedFiles[0], callbacks);
     },
-    [onAnalysisComplete, onUploadStart]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [onUploadStart, onStep, onAnalysisComplete, onError]
   );
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -36,6 +33,11 @@ export default function DocumentUpload({ onAnalysisComplete, onUploadStart }) {
     },
     maxFiles: 1,
   });
+
+  const handleDemo = async () => {
+    onUploadStart();
+    await streamDemo(callbacks);
+  };
 
   return (
     <div className="flex flex-col items-center gap-12 pt-16 animate-fade-in">
@@ -71,9 +73,21 @@ export default function DocumentUpload({ onAnalysisComplete, onUploadStart }) {
         </div>
       </div>
 
+      {/* Demo button */}
+      <div className="flex flex-col items-center gap-2">
+        <p className="text-xs text-gray-400">No contract handy?</p>
+        <button
+          onClick={handleDemo}
+          className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200 hover:border-blue-300 rounded-xl transition-all duration-200 hover:shadow-md hover:shadow-blue-500/10 active:scale-[0.98]"
+        >
+          <Play className="w-4 h-4" />
+          Try with a sample contract
+        </button>
+      </div>
+
       <div className="w-full max-w-2xl">
         <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-5 text-center">
-          What you'll get
+          What you&apos;ll get
         </h3>
         <div className="grid grid-cols-2 gap-4">
           {FEATURES.map((f) => (

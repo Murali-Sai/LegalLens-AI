@@ -19,6 +19,7 @@ async def test_health_check(client):
     data = response.json()
     assert data["status"] == "healthy"
     assert "collections" in data
+    assert "mock_mode" in data
 
 
 @pytest.mark.asyncio

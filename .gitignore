@@ -34,6 +34,10 @@ frontend/build/
 # ChromaDB local data
 backend/data/chroma_db/
 
+# SQLite
+backend/data/*.db
+*.db
+
 # MLflow
 mlruns/
 mlflow.db
