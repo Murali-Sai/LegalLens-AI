@@ -1,4 +1,4 @@
-"""Mock implementations for testing without Claude API credits."""
+"""Mock implementations for testing without OpenAI API credits."""
 
 import logging
 

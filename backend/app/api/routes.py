@@ -120,7 +120,10 @@ async def upload_stream(file: UploadFile):
     _validate_upload(file, contents)
 
     document_id = str(uuid.uuid4())
-    logger.info("SSE analysis started: %s (id=%s, %d bytes)", file.filename, document_id, len(contents))
+    logger.info(
+        "SSE analysis started: %s (id=%s, %d bytes)",
+        file.filename, document_id, len(contents),
+    )
 
     return _sse_stream(run_analysis_streaming(document_id, file.filename, contents))
 
@@ -155,7 +158,9 @@ async def upload_document(file: UploadFile):
         logger.error("Analysis failed for %s: %s", file.filename, str(e))
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
 
-    logger.info("Analysis complete in %.1fs — %d clauses", time.time() - start, result.total_clauses)
+    logger.info(
+        "Analysis complete in %.1fs — %d clauses", time.time() - start, result.total_clauses
+    )
     save_analysis(result)
     return result
 

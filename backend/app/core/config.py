@@ -9,8 +9,8 @@ load_dotenv(_env_path, override=True)
 
 
 class Settings(BaseSettings):
-    anthropic_api_key: str = ""
-    anthropic_model: str = "claude-sonnet-4-20250514"
+    openai_api_key: str = ""
+    openai_model: str = "gpt-4o-mini"
     chroma_persist_dir: str = "./data/chroma_db"
     mlflow_tracking_uri: str = "./mlruns"
     log_level: str = "INFO"
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     @property
     def effective_mock_mode(self) -> bool:
         """Auto-enable mock mode when no API key is configured."""
-        return self.mock_mode or not self.anthropic_api_key.strip()
+        return self.mock_mode or not self.openai_api_key.strip()
 
 
 settings = Settings()

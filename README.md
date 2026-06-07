@@ -4,7 +4,7 @@
 ![Python](https://img.shields.io/badge/python-3.11-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
 
-An agentic AI system that analyzes legal contracts, identifies risky clauses, and generates plain-English explanations with recommended actions — built with LangGraph, RAG, and the Claude API.
+An agentic AI system that analyzes legal contracts, identifies risky clauses, and generates plain-English explanations with recommended actions — built with LangGraph, RAG, and the OpenAI API.
 
 > **Disclaimer:** This tool provides informational analysis only — not legal advice.
 
@@ -30,12 +30,12 @@ Upload (PDF / DOCX)
        ▼  LangGraph StateGraph
 ┌─────────────┐   ┌─────────────┐   ┌─────────────┐
 │  1. EXTRACT │──▶│  2. ANALYZE │──▶│  3. COMPARE │
-│ Unstructured│   │  Claude API │   │  ChromaDB   │
+│ Unstructured│   │  OpenAI API │   │  ChromaDB   │
 └─────────────┘   └─────────────┘   └──────┬──────┘
                                            │
                   ┌─────────────┐   ┌──────▼──────┐
                   │  5. EXPLAIN │◀──│   4. FLAG   │
-                  │  Claude API │   │  Claude API │
+                  │  OpenAI API │   │  OpenAI API │
                   └──────┬──────┘   └─────────────┘
                          │
                          ▼
@@ -48,10 +48,10 @@ Upload (PDF / DOCX)
 | Step | What happens |
 |------|-------------|
 | **Extract** | Parse PDF/DOCX into text chunks via Unstructured.io (PyMuPDF fallback) |
-| **Analyze** | Claude classifies each chunk into one of 9 clause types |
+| **Analyze** | The LLM classifies each chunk into one of 9 clause types |
 | **Compare** | ChromaDB RAG benchmarks each clause against a curated standard/risky clause database |
-| **Flag** | Claude scores risk level (low / medium / high) with 2–3 sentence reasoning |
-| **Explain** | Claude generates a plain-English summary + single recommended action per clause |
+| **Flag** | The LLM scores risk level (low / medium / high) with 2–3 sentence reasoning |
+| **Explain** | The LLM generates a plain-English summary + single recommended action per clause |
 
 The frontend receives **real-time step updates** via Server-Sent Events (SSE) — no fake progress timers.
 
@@ -62,7 +62,7 @@ The frontend receives **real-time step updates** via Server-Sent Events (SSE) �
 | Layer | Technology |
 |-------|-----------|
 | Orchestration | LangGraph (multi-step agentic pipeline) |
-| LLM | Claude API (Anthropic) — auto-falls back to keyword analysis if no key |
+| LLM | OpenAI API (gpt-4o-mini) — auto-falls back to keyword analysis if no key |
 | RAG | ChromaDB + sentence-transformers |
 | Doc Parsing | Unstructured.io (PyMuPDF fallback) |
 | Backend | FastAPI + SSE streaming |
@@ -79,14 +79,14 @@ The frontend receives **real-time step updates** via Server-Sent Events (SSE) �
 ### Prerequisites
 - Python 3.11+
 - Node.js 20+
-- Anthropic API key ([get one here](https://console.anthropic.com))
+- OpenAI API key ([get one here](https://platform.openai.com/api-keys))
 
 ### Backend
 ```bash
 cd backend
 python -m venv .venv && source .venv/bin/activate  # Windows: .venv\Scripts\activate
 pip install ".[dev]"
-cp .env.example .env        # Edit and add your ANTHROPIC_API_KEY
+cp .env.example .env        # Edit and add your OPENAI_API_KEY
 uvicorn app.main:app --reload
 ```
 
@@ -146,7 +146,7 @@ data: { <full AnalysisResult JSON> }
 2. Render auto-detects `render.yaml` and creates both services
 3. In the Render dashboard → `legallens-backend` → **Environment**, add:
    ```
-   ANTHROPIC_API_KEY=sk-ant-...
+   OPENAI_API_KEY=sk-...
    ```
 4. Deploy — the frontend auto-proxies `/api` to the backend
 

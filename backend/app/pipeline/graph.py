@@ -128,10 +128,15 @@ async def run_analysis_streaming(document_id: str, filename: str, file_bytes: by
 async def run_demo_streaming():
     """Stream analysis of the bundled sample contract."""
     import uuid
-    sample = Path(__file__).resolve().parent.parent.parent / "data/sample_contracts/test_agreement.docx"
+    sample = (
+        Path(__file__).resolve().parent.parent.parent
+        / "data/sample_contracts/test_agreement.docx"
+    )
     if not sample.exists():
         yield f"event: error\ndata: {json.dumps('Sample contract not found')}\n\n"
         return
     document_id = "demo-" + str(uuid.uuid4())[:8]
-    async for chunk in run_analysis_streaming(document_id, "sample_contract.docx", sample.read_bytes()):
+    async for chunk in run_analysis_streaming(
+        document_id, "sample_contract.docx", sample.read_bytes()
+    ):
         yield chunk

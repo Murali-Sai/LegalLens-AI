@@ -1,4 +1,4 @@
-"""Prompt templates for each Claude-powered pipeline step."""
+"""Prompt templates for each LLM-powered pipeline step."""
 
 CLAUSE_TYPES_LIST = """\
 - liability: Clauses about legal liability, damages, limitations of liability

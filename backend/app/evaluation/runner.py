@@ -19,7 +19,7 @@ from app.evaluation.tracker import (
     log_retrieval_metrics,
     log_risk_scoring_metrics,
 )
-from app.pipeline.nodes import call_claude, parse_json_response
+from app.pipeline.nodes import call_llm, parse_json_response
 from app.pipeline.prompts import (
     ANALYZE_SYSTEM,
     ANALYZE_USER,
@@ -57,7 +57,7 @@ def evaluate_clause_detection(samples: list[dict]) -> dict:
     system = ANALYZE_SYSTEM.format(clause_types=CLAUSE_TYPES_LIST)
     user = ANALYZE_USER.format(chunks_text=chunks_text)
 
-    response_text = call_claude(system, user)
+    response_text = call_llm(system, user)
     predictions = parse_json_response(response_text)
 
     # Build prediction map
@@ -248,7 +248,7 @@ def evaluate_risk_scoring(samples: list[dict]) -> dict:
         )
 
         try:
-            response_text = call_claude(FLAG_SYSTEM, user_prompt)
+            response_text = call_llm(FLAG_SYSTEM, user_prompt)
             result = parse_json_response(response_text)
             predicted_risk = result.get("risk_level", "medium")
         except Exception as e:

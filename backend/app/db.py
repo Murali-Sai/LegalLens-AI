@@ -19,23 +19,32 @@ def _db_path() -> Path:
     return _DB_PATH
 
 
-def init_db() -> None:
+def _connect() -> sqlite3.Connection:
+    """Open a connection, ensuring the directory and schema exist.
+
+    Idempotent — safe to call before the FastAPI lifespan runs (e.g. in tests).
+    """
     path = _db_path()
     path.parent.mkdir(parents=True, exist_ok=True)
-    with sqlite3.connect(str(path)) as conn:
-        conn.execute("""
-            CREATE TABLE IF NOT EXISTS analyses (
-                document_id TEXT PRIMARY KEY,
-                filename    TEXT NOT NULL,
-                created_at  TEXT NOT NULL,
-                result_json TEXT NOT NULL
-            )
-        """)
+    conn = sqlite3.connect(str(path))
+    conn.execute("""
+        CREATE TABLE IF NOT EXISTS analyses (
+            document_id TEXT PRIMARY KEY,
+            filename    TEXT NOT NULL,
+            created_at  TEXT NOT NULL,
+            result_json TEXT NOT NULL
+        )
+    """)
+    return conn
+
+
+def init_db() -> None:
+    with _connect() as conn:
         conn.commit()
 
 
 def save_analysis(analysis: AnalysisResult) -> None:
-    with sqlite3.connect(str(_db_path())) as conn:
+    with _connect() as conn:
         conn.execute(
             "INSERT OR REPLACE INTO analyses VALUES (?, ?, ?, ?)",
             (
@@ -49,7 +58,7 @@ def save_analysis(analysis: AnalysisResult) -> None:
 
 
 def load_analysis(document_id: str) -> AnalysisResult | None:
-    with sqlite3.connect(str(_db_path())) as conn:
+    with _connect() as conn:
         row = conn.execute(
             "SELECT result_json FROM analyses WHERE document_id = ?",
             (document_id,),
@@ -61,7 +70,7 @@ def load_analysis(document_id: str) -> AnalysisResult | None:
 
 def load_all_analyses() -> list[dict]:
     """Return lightweight summaries (no clauses list) ordered newest first."""
-    with sqlite3.connect(str(_db_path())) as conn:
+    with _connect() as conn:
         rows = conn.execute(
             "SELECT document_id, filename, created_at, result_json FROM analyses "
             "ORDER BY created_at DESC LIMIT 50"

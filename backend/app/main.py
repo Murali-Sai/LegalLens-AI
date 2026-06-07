@@ -31,7 +31,7 @@ async def lifespan(app: FastAPI):
 
     if settings.effective_mock_mode:
         logger.warning(
-            "ANTHROPIC_API_KEY not set — running in mock mode (keyword-based analysis)"
+            "OPENAI_API_KEY not set — running in mock mode (keyword-based analysis)"
         )
 
     logger.info("LegalLens API ready")

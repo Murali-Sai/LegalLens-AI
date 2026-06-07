@@ -47,7 +47,7 @@ gcloud run deploy legallens-backend \
   --timeout 120 \
   --min-instances 0 \
   --max-instances 3 \
-  --set-env-vars "ANTHROPIC_API_KEY=$(grep ANTHROPIC_API_KEY backend/.env | cut -d= -f2)"
+  --set-env-vars "OPENAI_API_KEY=$(grep OPENAI_API_KEY backend/.env | cut -d= -f2)"
 
 BACKEND_URL=$(gcloud run services describe legallens-backend --region "$REGION" --format 'value(status.url)')
 

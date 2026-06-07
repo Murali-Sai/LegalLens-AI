@@ -5,7 +5,7 @@ import logging
 import tempfile
 from pathlib import Path
 
-import anthropic
+from openai import OpenAI
 
 from app.core.config import settings
 from app.core.models import (
@@ -31,31 +31,33 @@ from app.rag.vector_store import get_collection
 
 logger = logging.getLogger(__name__)
 
-# Shared Claude client (lazy init)
-_client: anthropic.Anthropic | None = None
+# Shared OpenAI client (lazy init)
+_client: OpenAI | None = None
 
 
-def get_claude_client() -> anthropic.Anthropic:
+def get_openai_client() -> OpenAI:
     global _client
     if _client is None:
-        _client = anthropic.Anthropic(api_key=settings.anthropic_api_key)
+        _client = OpenAI(api_key=settings.openai_api_key)
     return _client
 
 
-def call_claude(system: str, user: str) -> str:
-    """Make a synchronous Claude API call and return the text response."""
-    client = get_claude_client()
-    message = client.messages.create(
-        model=settings.anthropic_model,
+def call_llm(system: str, user: str) -> str:
+    """Make a synchronous OpenAI chat completion and return the text response."""
+    client = get_openai_client()
+    response = client.chat.completions.create(
+        model=settings.openai_model,
         max_tokens=4096,
-        system=system,
-        messages=[{"role": "user", "content": user}],
+        messages=[
+            {"role": "system", "content": system},
+            {"role": "user", "content": user},
+        ],
     )
-    return message.content[0].text
+    return response.choices[0].message.content
 
 
 def parse_json_response(text: str) -> dict | list:
-    """Extract JSON from Claude's response, handling markdown code blocks."""
+    """Extract JSON from the LLM response, handling markdown code blocks."""
     cleaned = text.strip()
     if cleaned.startswith("```"):
         lines = cleaned.split("\n")
@@ -161,11 +163,11 @@ def extract_node(state: PipelineState) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# Step 2: ANALYZE — Classify each chunk by clause type using Claude
+# Step 2: ANALYZE — Classify each chunk by clause type using the LLM
 # ---------------------------------------------------------------------------
 
 def analyze_node(state: PipelineState) -> dict:
-    """Classify each chunk by clause type using Claude."""
+    """Classify each chunk by clause type using the LLM."""
     chunks = state["chunks"]
     logger.info("Step 2/5: Analyzing %d chunks for clause types", len(chunks))
 
@@ -181,7 +183,7 @@ def analyze_node(state: PipelineState) -> dict:
     system = ANALYZE_SYSTEM.format(clause_types=CLAUSE_TYPES_LIST)
     user = ANALYZE_USER.format(chunks_text=chunks_text)
 
-    response_text = call_claude(system, user)
+    response_text = call_llm(system, user)
     classifications = parse_json_response(response_text)
 
     # Build ClassifiedClause objects
@@ -333,7 +335,7 @@ def _benchmark_clause(clause: ClassifiedClause) -> BenchmarkResult:
 # ---------------------------------------------------------------------------
 
 def flag_node(state: PipelineState) -> dict:
-    """Score each clause by risk level using Claude."""
+    """Score each clause by risk level using the LLM."""
     flagged = state.get("flagged_clauses", [])
     logger.info("Step 4/5: Scoring risk for %d clauses", len(flagged))
 
@@ -349,7 +351,7 @@ def flag_node(state: PipelineState) -> dict:
             ),
         )
 
-        response_text = call_claude(FLAG_SYSTEM, user_prompt)
+        response_text = call_llm(FLAG_SYSTEM, user_prompt)
         result = parse_json_response(response_text)
 
         try:
@@ -380,7 +382,7 @@ def flag_node(state: PipelineState) -> dict:
 # ---------------------------------------------------------------------------
 
 def explain_node(state: PipelineState) -> dict:
-    """Generate plain-English explanations and recommended actions using Claude."""
+    """Generate plain-English explanations and recommended actions using the LLM."""
     flagged = state.get("flagged_clauses", [])
     logger.info("Step 5/5: Generating explanations for %d clauses", len(flagged))
 
@@ -394,7 +396,7 @@ def explain_node(state: PipelineState) -> dict:
             risk_reasoning=item.risk_reasoning,
         )
 
-        response_text = call_claude(EXPLAIN_SYSTEM, user_prompt)
+        response_text = call_llm(EXPLAIN_SYSTEM, user_prompt)
         result = parse_json_response(response_text)
 
         explained.append(ExplainedClause(
