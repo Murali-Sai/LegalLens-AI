@@ -2,12 +2,10 @@ FROM python:3.11-slim AS base
 
 WORKDIR /app
 
-# System deps for Unstructured.io PDF/DOCX parsing
+# System deps: libmagic for filetype detection (unstructured), curl for healthcheck.
+# PDF text is extracted via PyMuPDF (no poppler/tesseract/libreoffice needed).
 RUN apt-get update && apt-get install -y --no-install-recommends \
     libmagic1 \
-    poppler-utils \
-    tesseract-ocr \
-    libreoffice-core \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
@@ -15,7 +13,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY pyproject.toml .
 RUN pip install --no-cache-dir "." && \
     pip install --no-cache-dir nltk && \
-    python -c "import nltk; nltk.download('punkt_tab', quiet=True); nltk.download('averaged_perceptron_tagger_eng', quiet=True)"
+    python -c "import nltk; nltk.download('punkt_tab', quiet=True); nltk.download('averaged_perceptron_tagger_eng', quiet=True)" && \
+    python -m spacy download en_core_web_sm
+# ^ unstructured uses spaCy for sentence tokenization; pre-install the model.
 
 # Copy application code
 COPY . .

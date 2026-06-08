@@ -1,3 +1,14 @@
+---
+title: LegalLens AI
+emoji: ⚖️
+colorFrom: indigo
+colorTo: blue
+sdk: docker
+app_port: 7860
+pinned: false
+license: mit
+---
+
 # LegalLens — AI-Powered Legal Document Analyst
 
 ![CI](https://github.com/Murali-Sai/LegalLens-AI/actions/workflows/ci.yml/badge.svg)
@@ -140,19 +151,38 @@ data: { <full AnalysisResult JSON> }
 
 ---
 
-## Deployment on Render
+## Deployment
 
-1. Fork this repo and connect it to [Render](https://render.com)
-2. Render auto-detects `render.yaml` and creates both services
-3. In the Render dashboard → `legallens-backend` → **Environment**, add:
+### Hugging Face Spaces (recommended — free)
+
+The repo ships a single root [`Dockerfile`](Dockerfile) that builds the React
+frontend and serves it from FastAPI on port `7860` — one container, no nginx.
+HF Spaces' free CPU tier (16 GB RAM) comfortably runs the full ML stack.
+
+1. Create a **Docker** Space at [huggingface.co/new-space](https://huggingface.co/new-space)
+2. Add your key as a **Secret** (Settings → Variables and secrets):
    ```
-   OPENAI_API_KEY=sk-...
+   OPENAI_API_KEY = sk-...
    ```
-4. Deploy — the frontend auto-proxies `/api` to the backend
+   *(Omit it to run a free demo in keyword-only mock mode.)*
+3. Push this repo to the Space's git remote:
+   ```bash
+   git remote add space https://huggingface.co/spaces/<user>/<space-name>
+   git push space main
+   ```
+   The Space builds from the root `Dockerfile` and reads the metadata block at
+   the top of this README. Data (ChromaDB, SQLite) is re-seeded on each restart.
 
-The backend mounts a **1 GB persistent disk** at `/data` for ChromaDB and SQLite.
+### Render (alternative — paid)
 
-> **Plan note:** The backend needs at least **2 GB RAM** for sentence-transformers (ChromaDB embeddings). Use the **Standard** plan ($25/month). The frontend runs on the **Free** plan.
+`render.yaml` defines a two-service deploy (backend + frontend) with a
+persistent disk. Note: the backend needs ~2 GB RAM for ChromaDB embeddings, so
+it requires Render's **Standard** plan; persistent disks are paid-only.
+
+### GCP Cloud Run (CI/CD)
+
+[`.github/workflows/ci.yml`](.github/workflows/ci.yml) lints, tests, builds, and
+deploys both services to Cloud Run on every push to `main`.
 
 ---
 

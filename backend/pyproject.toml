@@ -13,12 +13,12 @@ dependencies = [
     "langchain-openai>=0.2.0",
     "langchain-community>=0.3.0",
     "chromadb>=0.5.0",
-    "unstructured[pdf,docx]>=0.16.0",
+    "unstructured[docx]>=0.16.0",
+    "pymupdf>=1.24.0",
     "mlflow>=2.17.0",
     "pydantic>=2.9.0",
     "pydantic-settings>=2.6.0",
     "python-dotenv>=1.0.0",
-    "sentence-transformers>=3.0.0",
 ]
 
 [project.optional-dependencies]

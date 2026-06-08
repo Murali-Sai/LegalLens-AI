@@ -88,25 +88,18 @@ def extract_node(state: PipelineState) -> dict:
             from unstructured.partition.docx import partition_docx
             elements = partition_docx(filename=tmp_path)
         elif suffix == ".pdf":
-            try:
-                from unstructured.partition.pdf import partition_pdf
-                elements = partition_pdf(filename=tmp_path, strategy="fast")
-            except (ImportError, ModuleNotFoundError):
-                # Fallback: use PyMuPDF which handles most PDFs well
-                logger.warning(
-                    "unstructured_inference not available, using PyMuPDF fallback for PDF"
-                )
-                import fitz  # PyMuPDF
-                from unstructured.partition.text import partition_text
-                doc = fitz.open(tmp_path)
-                pages = []
-                for page in doc:
-                    pages.append(page.get_text())
-                doc.close()
-                raw = "\n".join(pages)
-                if not raw.strip():
-                    logger.warning("PyMuPDF extracted no text — PDF may be image-only/scanned")
-                elements = partition_text(text=raw) if raw.strip() else []
+            # PyMuPDF text extraction — lightweight, avoids the heavy
+            # unstructured[pdf]/torch layout-model stack. Handles text-based
+            # PDFs well; image-only/scanned PDFs would need OCR (out of scope).
+            import fitz  # PyMuPDF
+            from unstructured.partition.text import partition_text
+            doc = fitz.open(tmp_path)
+            pages = [page.get_text() for page in doc]
+            doc.close()
+            raw = "\n".join(pages)
+            if not raw.strip():
+                logger.warning("PyMuPDF extracted no text — PDF may be image-only/scanned")
+            elements = partition_text(text=raw) if raw.strip() else []
         else:
             from unstructured.partition.auto import partition
             elements = partition(filename=tmp_path)
